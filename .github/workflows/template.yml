@@ -1,0 +1,43 @@
+name: Template de Plan/Apply/Destroy do Terraform
+
+on: 
+  workflow_call:
+    inputs:
+      working-directory:
+        description: "Diretório onde estão os arquivos terraform"
+        default: iac
+        type: string
+    secrets:
+      AWS_ROLE_TO_ASSUME:
+        description: "Role da AWS para OIDC"
+        required: true
+
+
+jobs: 
+  plan:
+    if: ${{ inputs.action == 'apply' }}
+    uses: DiogoMajela/terraform-reusable/.github/workflows/terraform-plan.yml@main
+    with:
+      workding-directory: ${{ inputs.working-directory }}
+    secrets:
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+    
+  apply:
+    needs: plan
+    if: ${{ needs.plan.result == 'success' && inputs.action == 'apply' }}
+    uses: DiogoMajela/terraform-reusable/.github/workflows/terraform-apply.yml@main
+    with:
+      working-directory: ${{ inputs.working-directory }}
+    secrets:
+      AWS_ROLE_TO_ASSSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  
+  destroy: 
+    if: ${{ inputs.action == 'destroy' }}  
+    uses: DiogoMajela/terraform-reusable/.github/workflows/terraform-destroy.yml@main
+    with:
+      working-directory: ${{ inputs.working-directory }}
+    secrets:
+      AWS_ROLE_TO_ASSSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  
+
+
