@@ -20,12 +20,12 @@ jobs:
     permissions:
       id-token: write
       contents: read
-		
+    
     env:
       AWS_REGION: us-east-1
       TF_PLAN_FILE: tfplan
       ARTIFACT_NAME: terraform-plan
-		
+    
     steps:
       - name: Checkout repositório
         uses: actions/checkout@v4
@@ -50,16 +50,15 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: ${{ steps.validate.conclusion == 'success' }}
+        if: steps.validate.outcome == 'success'
         run: |
           terraform -chdir=${{ inputs.working-directory }} plan -input=false -out="${{ env.TF_PLAN_FILE }}"
-          terraform -chdir=${{ inputs.working-directory }} show -no-color "${{env.TF_PLAN_FILE}}" | head -n 80
+          terraform -chdir=${{ inputs.working-directory }} show -no-color "${{ env.TF_PLAN_FILE }}" | head -n 80
       
       - name: Upload do plano como artefato
-        if: ${{ steps.plan.conclusion == 'success' }}
+        if: steps.plan.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working-directory }}/${{ env.TF_PLAN_FILE }}
           retention-days: 7
-
