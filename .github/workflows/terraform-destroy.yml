@@ -3,7 +3,7 @@ name: Terraform Destroy Plan
 on:
   workflow_call:
     inputs:
-      working_directory:
+      working-directory:
         description: "Diretorio onde estão os arquivos terraform"
         default: iac
         type: string
@@ -42,12 +42,12 @@ jobs:
           terraform_version: 1.9.5
       
       - name: Terraform init
-        run: terraform -chdir=${{ inputs.working_directory }} init -input=false
+        run: terraform -chdir=${{ inputs.working-directory }} init -input=false
 
       - name: Terraform Plan -destroy
         id: plan_destroy
         run: |
-          terraform -chdir=${{ inputs.working_directory }} plan -destroy -input=false -out="${{ env.TF_PLAN_FILE }}"
+          terraform -chdir=${{ inputs.working-directory }} plan -destroy -input=false -out="${{ env.TF_PLAN_FILE }}"
       
       - name: Upload artifacts to destroy
         if: ${{ steps.plan_destroy.conclusion == 'success' }}
@@ -55,7 +55,7 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
-            ${{ inputs.working_directory }}/${{ env.TF_PLAN_FILE }}
+            ${{ inputs.working-directory }}/${{ env.TF_PLAN_FILE }}
           retention-days: 7
 
   deploy_apply:
@@ -64,7 +64,7 @@ jobs:
     if: ${{ needs.terraform-destroy-plan.result == 'success'}}
     uses: DiogoMajela/terraform-reusable/.github/workflows/terraform-destroy-apply.yml@main
     with:
-      working-directory: ${{ inputs.working_directory }}
+      working-directory: ${{ inputs.working-directory }}
     secrets: 
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
 
