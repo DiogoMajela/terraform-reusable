@@ -22,7 +22,7 @@ jobs:
     if: ${{ inputs.action == 'apply' }}
     uses: DiogoMajela/terraform-reusable/.github/workflows/terraform-plan.yml@main
     with:
-      workding-directory: ${{ inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}
     secrets:
       AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
     
