@@ -33,7 +33,7 @@ jobs:
     with:
       working-directory: ${{ inputs.working-directory }}
     secrets:
-      AWS_ROLE_TO_ASSSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   
   destroy: 
     if: ${{ inputs.action == 'destroy' }}  
@@ -41,7 +41,7 @@ jobs:
     with:
       working-directory: ${{ inputs.working-directory }}
     secrets:
-      AWS_ROLE_TO_ASSSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
   
 
 
